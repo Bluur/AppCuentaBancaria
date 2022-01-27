@@ -15,6 +15,16 @@ public class CuentaBancaria {
     private String DC;
     private String numCuenta;
     
+    /**
+     * Crea un objeto de la clase cuenta bancaria
+     * @param titular
+     * @param nif
+     * @param password
+     * @param entidad
+     * @param oficina
+     * @param DC
+     * @param numCuenta 
+     */
     //Constructor con parámetros individuales
     public CuentaBancaria(String titular, String nif, String password, String entidad, String oficina, String DC, String numCuenta){
         if(validarTitular(titular)){
@@ -41,7 +51,15 @@ public class CuentaBancaria {
         this.DC = obtenerDigitosControl(this.entidad, this.oficina, this.numCuenta);
     }
     
-    //Constructor con CCC sin descomponer
+    /**
+     * Construye una Cuenta bancaria a partir de un CCC, es decir, un número completo.
+     * Primero valida el CCC comprobando los dígitos de control y si es válido crea el objeto.
+     * @param titular
+     * @param nif
+     * @param password
+     * @param CCC 
+     */
+    //Constructor con parámetros compuestos (CCC)
     public CuentaBancaria(String titular, String nif, String password, String CCC){
        if(validarCCC(CCC)){
            this.titular = titular; 
@@ -87,11 +105,7 @@ public class CuentaBancaria {
      */
     public static boolean validarCCC(String CCC){
         String DC = obtenerDigitosControl(CCC.substring(0, 4), CCC.substring(4, 8), CCC.substring(10));
-        if(DC.equals(CCC.substring(8, 10))){
-            return true;
-        }else{
-            return false;
-        }
+        return DC.equals(CCC.substring(8, 10));
     }
     
     public void retirar(double cantidad){
@@ -138,6 +152,10 @@ public class CuentaBancaria {
     
     public String getDC(){
         return DC;
+    }
+    
+    public String getCCC(){
+        return this.entidad+this.oficina+this.DC+this.numCuenta;
     }
 
     public void setTitular(String titular) {
