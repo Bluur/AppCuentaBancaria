@@ -48,7 +48,7 @@ public class CuentaBancaria {
            this.nif = nif;
            this.password = password; 
            this.entidad = CCC.substring(0, 4); 
-           this.oficina = CCC.substring(4, 7); 
+           this.oficina = CCC.substring(4, 8); 
            this.numCuenta = CCC.substring(10);
            this.DC = CCC.substring(8, 10);
        }else{
@@ -79,7 +79,12 @@ public class CuentaBancaria {
         String DC = ""+sumad1+sumad2;
         return DC;
     }
-    
+    /**
+     * Recibe un CCC de cuenta, y llama a la función obtenerDigitosControl,
+     * esta devuelve esos digitos calculados, y los compara con los de la cuenta.
+     * @param CCC
+     * @return boolean
+     */
     public static boolean validarCCC(String CCC){
         String DC = obtenerDigitosControl(CCC.substring(0, 4), CCC.substring(4, 8), CCC.substring(10));
         if(DC.equals(CCC.substring(8, 10))){
@@ -149,13 +154,9 @@ public class CuentaBancaria {
 
     @Override
     public String toString() {
-        return "CuentaBancaria{" + "titular = " + titular + ", nif = " + nif + ", password = " + password + ", saldo = " + saldo + ", CCC = " + entidad + oficina + DC + numCuenta + '}';
+        return "CuentaBancaria{"+"titular = "+titular+", nif = "+nif+", password = "+password+", saldo = "+saldo +", CCC = " + entidad+" "+oficina+" "+DC+" "+numCuenta+'}';
     }
-    
-    
-    
-    
-    
+
     //Métodos Privados
     
     /**
