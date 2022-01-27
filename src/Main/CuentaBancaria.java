@@ -35,33 +35,58 @@ public class CuentaBancaria {
             throw new IllegalArgumentException("La contraseña no es válida");
         }
         
-        
+        this.entidad = entidad;
+        this.oficina = oficina;
+        this.numCuenta = numCuenta;
+        this.DC = obtenerDigitosControl(this.entidad, this.oficina, this.numCuenta);
     }
     
     //Constructor con CCC sin descomponer
     public CuentaBancaria(String titular, String nif, String password, String CCC){
-       this(titular, nif, password, CCC.substring(0, 4), CCC.substring(4, 8), CCC.substring(8, 10), CCC.substring(10)); 
+       if(validarCCC(CCC)){
+           this.titular = titular; 
+           this.nif = nif;
+           this.password = password; 
+           this.entidad = CCC.substring(0, 4); 
+           this.oficina = CCC.substring(4, 7); 
+           this.numCuenta = CCC.substring(10);
+           this.DC = CCC.substring(8, 10);
+       }else{
+           throw new IllegalArgumentException("Los dígitos de control no son correctos");
+       }
     }
     
     //Métodos Públicos
+    /**
+     * Se le pasan la entidad, oficina y numCuenta, para que 
+     * calcule el numero de control.
+     * @param entidad
+     * @param oficina
+     * @param numCuenta
+     * @return DC
+     */
     public static String obtenerDigitosControl(String entidad, String oficina, String numCuenta){
         int pesos[] = {1, 2, 4, 8, 5, 10, 9, 7, 3, 6};
         int sumad1 = 0;
         int sumad2 = 0;
-        String cad1 = entidad + oficina;
+        String cad1 = "00" + entidad + oficina;
         for(int i=0; i < pesos.length; i++){
             sumad1 += (int)cad1.charAt(i) * pesos[i];
             sumad2 += (int)numCuenta.charAt(i) * pesos[i];
         }
         sumad1 = sumad1 % 11;
         sumad2 = sumad2 % 11;
-        String DC = 
-        return "";
+        String DC = ""+sumad1+sumad2;
+        return DC;
     }
     
     public static boolean validarCCC(String CCC){
-        
-        return false;
+        String DC = obtenerDigitosControl(CCC.substring(0, 4), CCC.substring(4, 8), CCC.substring(10));
+        if(DC.equals(CCC.substring(8, 10))){
+            return true;
+        }else{
+            return false;
+        }
     }
     
     public void retirar(double cantidad){
@@ -104,6 +129,10 @@ public class CuentaBancaria {
 
     public String getNumCuenta() {
         return numCuenta;
+    }
+    
+    public String getDC(){
+        return DC;
     }
 
     public void setTitular(String titular) {
