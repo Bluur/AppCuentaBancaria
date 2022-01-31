@@ -8,14 +8,12 @@ public class AplicacionCuentaBancaria {
         int numeroControl = 0;
         
         String entidadBancaria = leerDatosTeclado.leerString("¿A que entidad bancaria perteneces?");
-        
+        String mensajeBienvenida = "Bienvenido a %s".formatted(entidadBancaria);
+        System.out.println(mensajeBienvenida);
 
         boolean continuar = true;
         //Bucle
         while(continuar){
-            String mensajeBienvenida = "Bienvenido a %s".formatted(entidadBancaria);
-            System.out.println(mensajeBienvenida);
-            
             String eleccion = menu();
                     
             switch(eleccion){
@@ -24,6 +22,7 @@ public class AplicacionCuentaBancaria {
                         CuentaBancaria cuenta = crearCuenta();
                         arrayCuentas[numeroControl] = cuenta;
                         numeroControl++;
+                        System.out.println("Se ha añadido su cuenta correctamente");
                     }else{
                         System.out.println("No se pueden añadir más cuentas");
                     }
@@ -64,7 +63,6 @@ public class AplicacionCuentaBancaria {
         String eleccion;
         do{
             eleccion = leerDatosTeclado.leerString("¿Qué operación desea realizar?(Introduzca el número de operación)");
-            System.out.println(eleccion);
         }while(!validarEleccion(eleccion));
 
         return eleccion;
@@ -100,7 +98,6 @@ public class AplicacionCuentaBancaria {
             String DC = "63";
             String numCuenta = "8909312432";
             cuenta = new CuentaBancaria(titular, nif, password, entidad, oficina, DC, numCuenta);
-            System.out.println(cuenta);
             continuar = false;
         }while(continuar);
         return cuenta;
