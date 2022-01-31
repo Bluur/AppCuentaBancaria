@@ -16,46 +16,55 @@ public class CuentaBancaria {
     private String numCuenta;
 
     /**
-     * Constructor con parámetros individuales, valida los datos, los añade
-     * a sus respectivos campos, creando el objeto. 
+     * Constructor con parámetros individuales, valida los datos, los añade a
+     * sus respectivos campos, creando el objeto. Para que se pueda crear el 
+     * objeto, los datos han de ser correctos, en caso de que no encajen los
+     * dígitos de control saltará una excepción, por lo que es recomendado 
+     * comprobar los datos antes de usar la clase.
      *
-     * @param titular
-     * @param nif
-     * @param password
-     * @param entidad
-     * @param oficina
-     * @param DC
-     * @param numCuenta
+     * @param titular String con el nombre y apellidos del titular. Min 10 máx
+     * 100.
+     * @param nif String con el DNI. Debe cumplir los parámetros de un nif, en 
+     * caso contrario, saltará excepción.
+     * @param password String con la contraseña. Min 2 números, 2 letras, 1 
+     * mayúscula y mínimo 8 carácteres, máximo 20.
+     * @param entidad Número de la entidad bancaria.
+     * @param oficina Número de la oficina bancaria.
+     * @param DC Dígitos de control que se calculan con una fórmula, en caso de 
+     * no ser válidos, saltará una excepción.
+     * @param numCuenta Número de cuenta del usuario.
      */
     public CuentaBancaria(String titular, String nif, String password, String entidad, String oficina, String DC, String numCuenta) {
-        if (validarTitular(titular)) {
-            this.titular = titular;
-        } else {
+        if (!validarTitular(titular)){
             throw new IllegalArgumentException("El titular no es válido");
         }
-
-        if (validarNif(nif)) {
-            this.nif = nif;
-        } else {
+        
+        if (!validarNif(nif)){
             throw new IllegalArgumentException("El nif no es válido");
         }
-
-        if (validarContraseña(password)) {
-            this.password = password;
-        } else {
+        
+        if(!validarContraseña(password)){
             throw new IllegalArgumentException("La contraseña no es válida");
         }
-
+        
+        if(!validarCCC(entidad + oficina + DC + numCuenta)){
+            throw new IllegalArgumentException("Los dígitos de control no son válidos");
+        }
+        
+        this.titular = titular;
+        this.nif = nif;
+        this.password = password;
         this.entidad = entidad;
         this.oficina = oficina;
+        this.DC = DC;
         this.numCuenta = numCuenta;
-        this.DC = obtenerDigitosControl(this.entidad, this.oficina, this.numCuenta);
     }
 
     /**
-     *  Construye un objeto de la clase con parámetros compuestos, es decir, recibe 
-     *  el numero de cuenta entero, valida el número validando los dígitos de control
-     *  y en caso de ser un nº de cuenta correcto valida y añade el resto de campos.
+     * Construye un objeto de la clase con parámetros compuestos, es decir,
+     * recibe el numero de cuenta entero, valida el número validando los dígitos
+     * de control y en caso de ser un nº de cuenta correcto valida y añade el
+     * resto de campos.
      *
      * @param titular
      * @param nif
@@ -63,33 +72,7 @@ public class CuentaBancaria {
      * @param CCC
      */
     public CuentaBancaria(String titular, String nif, String password, String CCC) {
-        if (validarCCC(CCC)) {
-
-            if (validarTitular(titular)) {
-                this.titular = titular;
-            } else {
-                throw new IllegalArgumentException("El titular no es válido");
-            }
-
-            if (validarNif(nif)) {
-                this.nif = nif;
-            } else {
-                throw new IllegalArgumentException("El nif no es válido");
-            }
-
-            if (validarContraseña(password)) {
-                this.password = password;
-            } else {
-                throw new IllegalArgumentException("La contraseña no es válida");
-            }
-
-            this.entidad = CCC.substring(0, 4);
-            this.oficina = CCC.substring(4, 8);
-            this.numCuenta = CCC.substring(10);
-            this.DC = CCC.substring(8, 10);
-        } else {
-            throw new IllegalArgumentException("Los dígitos de control no son correctos");
-        }
+        this(titular, nif, password, CCC.substring(0, 4), CCC.substring(4, 8), CCC.substring(8, 10), CCC.substring(10));
     }
 
     //Métodos Públicos
@@ -234,4 +217,5 @@ public class CuentaBancaria {
         Matcher p = pass.matcher(contraseña);
         return p.matches();
     }
+
 }
