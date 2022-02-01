@@ -36,13 +36,19 @@ public class AplicacionCuentaBancaria {
                     if (arrayCuentas[0] == null) {
                         System.out.println("No hay cuentas que borrar");
                     } else {
-                        String nif = leerDatosTeclado.leerString("Deme su dni");
+                        String nif = leerDatosTeclado.leerString("Deme el NIF de la cuenta");
                         int pos = buscarCuenta(nif, arrayCuentas);
                         eliminarCuenta(arrayCuentas, pos);
                     }
                 }
-                case "3" ->
-                    gestionarCuenta();
+                case "3" -> {
+                    if(numeroControl == 0){
+                        System.out.println("No hay cuentas que gestionar");
+                    }else{
+                        String nifTemp = leerDatosTeclado.leerString("Dame el NIF de la cuenta");
+                        gestionarCuenta(nifTemp, arrayCuentas);
+                    }
+                }
                 case "4" ->
                     consultarDepósitos();
                 case "5" ->
@@ -59,7 +65,7 @@ public class AplicacionCuentaBancaria {
      */
     public static String menu() {
         //Imprime las opciones
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i <= 5; i++) {
             switch (i) {
                 case 1 ->
                     System.out.println("1.- Crear cuenta bancaria");
@@ -112,19 +118,17 @@ public class AplicacionCuentaBancaria {
      * @return Objeto CuentaBancaria
      */
     private static CuentaBancaria crearCuenta() {
-        boolean continuar = true;
         CuentaBancaria cuenta;
-        do {
-            String titular = "Miguel Garcia";
-            String nif = "77446461X";
-            String password = "170899170899aG";
-            String entidad = "1324";
-            String oficina = "3452";
-            String DC = "63";
-            String numCuenta = "8909312432";
-            cuenta = new CuentaBancaria(titular, nif, password, entidad, oficina, DC, numCuenta);
-            continuar = false;
-        } while (continuar);
+        
+        String titular = "Miguel Garcia";
+        String nif = "77446461X";
+        String password = "170899170899aG";
+        String entidad = "1324";
+        String oficina = "3452";
+        String DC = "63";
+        String numCuenta = "8909312432";
+        
+        cuenta = new CuentaBancaria(titular, nif, password, entidad, oficina, DC, numCuenta);
         return cuenta;
     }
 
@@ -142,7 +146,7 @@ public class AplicacionCuentaBancaria {
     private static int buscarCuenta(String nif, CuentaBancaria[] cuentas) {
         int pos = 0;
         boolean continuar = true;
-        for (int i = 0; continuar && i < 10 || cuentas[i + 1] != null; i++) {
+        for (int i = 0; continuar && i < 10 && cuentas[i + 1] != null; i++) {
             String nifPrimero = cuentas[i].getNif();
             if (nifPrimero.equals(nif)) {
                 pos = i;
@@ -152,8 +156,30 @@ public class AplicacionCuentaBancaria {
         return pos;
     }
 
-    private static void gestionarCuenta() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private static void gestionarCuenta(String nif, CuentaBancaria arrayCuentas[]) {
+        int pos = buscarCuenta(nif, arrayCuentas);
+
+        String decision = menuGestion();
+        
+        switch(decision){
+            case "1" -> System.out.println(arrayCuentas[pos].getCCC());
+            case "2" -> System.out.println(arrayCuentas[pos].getTitular());
+            case "3" -> System.out.println(arrayCuentas[pos].getNif());
+            case "4" -> {
+                System.out.println("Dame la contraseña que quieres usar");
+                String contraseña = leerDatosTeclado.leerString("Debe tener al menso 1 mayus, 1 minus, y 10 carácteres");
+                arrayCuentas[pos].setPassword(contraseña);
+            }
+            case "5" -> {
+                double cantidad = leerDatosTeclado.leerDouble("Dame la cantidad que quieres ingresar", 0);
+                arrayCuentas[pos].ingresar(cantidad);
+            }
+            case "6" -> {
+                double cantidad = leerDatosTeclado.leerDouble("Dame la cantidad que quieres retirar", 0);
+                arrayCuentas[pos].retirar(cantidad);
+            }
+            case "7" -> System.out.println("Saliendo al menú principal...");
+        }
     }
 
     private static void consultarDepósitos() {
@@ -173,7 +199,34 @@ public class AplicacionCuentaBancaria {
                 arrayCuentas[i] = null;
             }
         }
+    }
 
+    private static String menuGestion() {
+        for(int i = 0; i <= 8; i++){
+            switch (i) {
+                case 1 ->
+                    System.out.println("1.- Ver el número de cuenta completo");
+                case 2 ->
+                    System.out.println("2.- Ver el titular de la cuenta");
+                case 3 ->
+                    System.out.println("3.- Ver el NIF de la cuenta");
+                case 4 ->
+                    System.out.println("4.- Modificar la contraseña");
+                case 5 ->
+                    System.out.println("5.- Realizar un ingreso");
+                case 6 -> 
+                    System.out.println("6.- Retirar Efectivo");
+                case 7 -> 
+                    System.out.println("7.- Consultar Saldo");
+                case 8 ->
+                    System.out.println("8.- Volver al menú principal");
+            }
+        }
+        String decision;
+        do{
+            decision = leerDatosTeclado.leerString("¿Qué operación desea realizar?(1-8)");
+        }while(!validarEleccion(decision));
+        return decision;
     }
 
 }
