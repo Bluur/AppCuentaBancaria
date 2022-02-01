@@ -97,16 +97,21 @@ public class AplicacionCuentaBancaria {
     private static boolean validarEleccion(String eleccion) {
         boolean validez = false;
         switch (eleccion) {
-            case "1" ->
-                validez = true;
-            case "2" ->
-                validez = true;
-            case "3" ->
-                validez = true;
-            case "4" ->
-                validez = true;
-            case "5" ->
-                validez = true;
+            case "1" -> validez = true;
+
+            case "2" -> validez = true;
+
+            case "3" -> validez = true;
+
+            case "4" -> validez = true;
+                
+            case "5" -> validez = true;
+                
+            case "6" -> validez = true;
+            
+            case "7" -> validez = true;
+            
+            case "8" -> validez = true;
         }
 
         return validez;
@@ -158,30 +163,31 @@ public class AplicacionCuentaBancaria {
 
     private static void gestionarCuenta(String nif, CuentaBancaria arrayCuentas[]) {
         int pos = buscarCuenta(nif, arrayCuentas);
-
-        String decision = menuGestion();
-        
-        switch(decision){
-            case "1" -> System.out.println(arrayCuentas[pos].getCCC());
-            case "2" -> System.out.println(arrayCuentas[pos].getTitular());
-            case "3" -> System.out.println(arrayCuentas[pos].getNif());
-            case "4" -> {
-                System.out.println("Dame la contraseña que quieres usar");
-                String contraseña = leerDatosTeclado.leerString("Debe tener al menso 1 mayus, 1 minus, y 10 carácteres");
-                arrayCuentas[pos].setPassword(contraseña);
+        String decision;
+        do{
+            decision = menuGestion();
+            switch(decision){
+                case "1" -> System.out.println(arrayCuentas[pos].getCCC());
+                case "2" -> System.out.println(arrayCuentas[pos].getTitular());
+                case "3" -> System.out.println(arrayCuentas[pos].getNif());
+                case "4" -> {
+                    System.out.println("Dame la contraseña que quieres usar");
+                    String contraseña = leerDatosTeclado.leerString("Debe tener al menso 1 mayus, 1 minus, y 10 carácteres");
+                    arrayCuentas[pos].setPassword(contraseña);
+                }
+                case "5" -> {
+                    double cantidad = leerDatosTeclado.leerDouble("Dame la cantidad que quieres ingresar", 0);
+                    arrayCuentas[pos].ingresar(cantidad);
+                }
+                case "6" -> {
+                    double cantidad = leerDatosTeclado.leerDouble("Dame la cantidad que quieres retirar", 0);
+                    arrayCuentas[pos].retirar(cantidad);
+                }
+                case "7" -> System.out.println(arrayCuentas[pos].getSaldo());
+                case "8" -> System.out.println("Saliendo del gestor de cuentas");
             }
-            case "5" -> {
-                double cantidad = leerDatosTeclado.leerDouble("Dame la cantidad que quieres ingresar", 0);
-                arrayCuentas[pos].ingresar(cantidad);
-            }
-            case "6" -> {
-                double cantidad = leerDatosTeclado.leerDouble("Dame la cantidad que quieres retirar", 0);
-                arrayCuentas[pos].retirar(cantidad);
-            }
-            case "7" -> System.out.println("Saliendo al menú principal...");
-        }
+        }while(!decision.equals("8"));
     }
-
     private static void consultarDepósitos() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

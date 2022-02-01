@@ -67,9 +67,8 @@ public class leerDatosTeclado {
                 System.out.println("Ese número no me sirve");
                 input.next();
             }
-        }while(input.nextDouble() < minimo);
-        
-        numero = input.nextDouble();
+            numero = input.nextDouble();
+        }while(numero < minimo);
         return numero;
     }
 
