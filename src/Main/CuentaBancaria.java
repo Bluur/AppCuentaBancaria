@@ -91,8 +91,8 @@ public class CuentaBancaria {
         int sumad2 = 0;
         String cad1 = "00" + entidad + oficina;
         for (int i = 0; i < pesos.length; i++) {
-            sumad1 += (int) cad1.charAt(i) * pesos[i];
-            sumad2 += (int) numCuenta.charAt(i) * pesos[i];
+            sumad1 +=  Integer.parseInt(Character.toString(cad1.charAt(i))) * pesos[i];
+            sumad2 +=  Integer.parseInt(Character.toString(numCuenta.charAt(i))) * pesos[i];
         }
         sumad1 = sumad1 % 11;
         sumad2 = sumad2 % 11;
@@ -200,9 +200,20 @@ public class CuentaBancaria {
      * @return boolean
      */
     private boolean validarNif(String nif) {
+        //Valida la estructura
         Pattern dni = Pattern.compile("([XY]?)([0-9]{1,9})([A-Za-z])");
         Matcher d = dni.matcher(nif);
-        return d.matches();
+        
+        //Valida el NIF en sí
+        String cadenaValidadora = "TRWAGMYFPDXBNJZSQVHLCKE";
+        boolean valido = false;
+        
+        int numero = Integer.parseInt(nif.substring(0, 8)) % 23;
+        System.out.println(numero);
+        if(nif.endsWith(Character.toString(cadenaValidadora.charAt(numero)))){
+            valido = true;
+        }
+        return d.matches() && valido;
     }
 
     /**
