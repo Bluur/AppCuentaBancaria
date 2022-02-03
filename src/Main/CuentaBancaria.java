@@ -39,7 +39,7 @@ public class CuentaBancaria {
             throw new IllegalArgumentException("El titular no es válido");
         }
         
-        if (!validarNif(nif)){
+        if (!validarId(nif)){
             throw new IllegalArgumentException("El nif no es válido");
         }
         
@@ -47,7 +47,7 @@ public class CuentaBancaria {
             throw new IllegalArgumentException("La contraseña no es válida");
         }
         
-        if(!validarCCC(entidad + oficina + DC + numCuenta)){
+        if(!comprobarCCC(entidad + oficina + DC + numCuenta)){
             throw new IllegalArgumentException("Los dígitos de control no son válidos");
         }
         
@@ -107,7 +107,7 @@ public class CuentaBancaria {
      * @param CCC
      * @return boolean
      */
-    public static boolean validarCCC(String CCC) {
+    public static boolean comprobarCCC(String CCC) {
         String DC = obtenerDigitosControl(CCC.substring(0, 4), CCC.substring(4, 8), CCC.substring(10));
         return DC.equals(CCC.substring(8, 10));
     }
@@ -199,21 +199,92 @@ public class CuentaBancaria {
      * @param nif
      * @return boolean
      */
-    private boolean validarNif(String nif) {
-        //Valida la estructura
-        Pattern dni = Pattern.compile("([XY]?)([0-9]{1,9})([A-Za-z])");
+    private boolean validarId(String nif) {
+        boolean validez = false;
+        char inicio = nif.charAt(0);
+        //comprobar si es nif o nie
+        if(Character.isDigit(nif.charAt(0))){
+            validez = validarNif(nif);
+        }else if(Character.isAlphabetic(nif.charAt(0)) && Character.isAlphabetic(nif.charAt(8)) && inicio == 'Y' || inicio == 'X' || inicio == 'Z'){
+            String nie;
+            if(nif.startsWith("X")){
+                nie = "0" + nif.substring(1);
+            }else if(nif.startsWith("y")){
+                nie = "1" + nif.substring(1);
+            }else{
+                nie = "2" + nif.substring(1);
+            }
+            validez = validarNif(nie);
+        }else if(Character.isAlphabetic(inicio) && inicio != 'Y' && inicio != 'X' && inicio != 'Z'){
+            validez = validarCif(nif);
+        }
+        return validez;
+    }
+    
+    /**
+     * Valida el NIF y el NIE, con un patrón para la estructura y con un
+     * algoritmo para la letra de control.
+     * @param nif NIF/NIE de entrada
+     * @return boolean
+     */
+    private boolean validarNif(String nif){
+        Pattern dni = Pattern.compile("([XYZ]?)([0-9]{1,9})([A-Za-z])");
         Matcher d = dni.matcher(nif);
-        
-        //Valida el NIF en sí
+
         String cadenaValidadora = "TRWAGMYFPDXBNJZSQVHLCKE";
         boolean valido = false;
-        
+
         int numero = Integer.parseInt(nif.substring(0, 8)) % 23;
-        System.out.println(numero);
+        
         if(nif.endsWith(Character.toString(cadenaValidadora.charAt(numero)))){
             valido = true;
         }
+
         return d.matches() && valido;
+    }
+    
+    /**
+     * Valida el CIF de una empresa algorítmicamente, tanto con letra al final
+     * como sin letra al final.
+     * @param cif CIF a validar
+     * @return boolean
+     */
+    private boolean validarCif(String cif){
+        //Variables
+        String caracteres = "ABCDEFGHIJ";
+        int sumaPares = 0;
+        int sumaImpares = 0;
+        boolean validez;
+        char charFinal = cif.charAt(8);
+        
+        //Cálculos necesarios para la validación
+        for(int i=1; i < 8; i++){
+            if(i%2 == 0){
+                sumaPares += (Integer.parseInt(Character.toString(cif.charAt(i))));
+            }else{
+                if(Integer.parseInt(Character.toString(cif.charAt(i))) * 2 >= 10){
+                    int digito1 = (Integer.parseInt(Character.toString(cif.charAt(i))) * 2) / 10;
+                    int digito2 = (Integer.parseInt(Character.toString(cif.charAt(i))) * 2) % 10;
+                    sumaImpares += digito1 + digito2;
+                    System.out.println(sumaImpares);
+                }else{
+                    sumaImpares += Integer.parseInt(Character.toString(cif.charAt(i)));
+                }
+            }
+        }
+        
+        String suma = "" + sumaPares + sumaImpares;
+        int digito = Integer.parseInt(Character.toString(suma.charAt(suma.length()-1)));
+        digito = 10 - digito;
+
+        //Da las diferentes salidas en caso de que sea un número o una letra
+        if(Character.isAlphabetic(charFinal)){
+            validez = Character.toString(caracteres.charAt(digito)).equals(Character.toString(charFinal));
+        }else{
+            String digitoFinal = ""+digito;
+            validez = Character.toString(charFinal).equals(digitoFinal);
+        }
+        return validez;
     }
 
     /**

@@ -83,7 +83,7 @@ public class AplicacionCuentaBancaria {
         String eleccion;
         do {
             eleccion = leerDatosTeclado.leerString("¿Qué operación desea realizar?(Introduzca el número de operación)");
-        } while (!validarEleccion(eleccion));
+        } while (!validarEleccionMenu1(eleccion));
 
         return eleccion;
     }
@@ -94,27 +94,8 @@ public class AplicacionCuentaBancaria {
      * @param eleccion String que contine el número elegido por el usuario
      * @return boolean
      */
-    private static boolean validarEleccion(String eleccion) {
-        boolean validez = false;
-        switch (eleccion) {
-            case "1" -> validez = true;
-
-            case "2" -> validez = true;
-
-            case "3" -> validez = true;
-
-            case "4" -> validez = true;
-                
-            case "5" -> validez = true;
-                
-            case "6" -> validez = true;
-            
-            case "7" -> validez = true;
-            
-            case "8" -> validez = true;
-        }
-
-        return validez;
+    private static boolean validarEleccionMenu1(String eleccion) {
+        return eleccion.equals("1") || eleccion.equals("2") || eleccion.equals("3") || eleccion.equals("4") || eleccion.equals("5");
     }
 
     /**
@@ -160,7 +141,12 @@ public class AplicacionCuentaBancaria {
         }
         return pos;
     }
-
+    
+    /**
+     * Función que gestiona la cuenta bancaria asociada al NIF/NIE/CIF elegido
+     * @param nif NIF/NIE/CIF introducido
+     * @param arrayCuentas Array bancario para realizar la busqueda de la cuenta
+     */
     private static void gestionarCuenta(String nif, CuentaBancaria arrayCuentas[]) {
         int pos = buscarCuenta(nif, arrayCuentas);
         String decision;
@@ -188,6 +174,7 @@ public class AplicacionCuentaBancaria {
             }
         }while(!decision.equals("8"));
     }
+    
     private static void consultarDepósitos() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -206,7 +193,11 @@ public class AplicacionCuentaBancaria {
             }
         }
     }
-
+    
+    /**
+     * Menú del apartado de gestión de la cuenta bancaria
+     * @return String con la elección del usuario
+     */
     private static String menuGestion() {
         for(int i = 0; i <= 8; i++){
             switch (i) {
@@ -228,11 +219,22 @@ public class AplicacionCuentaBancaria {
                     System.out.println("8.- Volver al menú principal");
             }
         }
+        
         String decision;
         do{
             decision = leerDatosTeclado.leerString("¿Qué operación desea realizar?(1-8)");
-        }while(!validarEleccion(decision));
+        }while(!validarEleccionMenu2(decision));
         return decision;
+    }
+    
+    /**
+     * Recibe la String y la valida.
+     *
+     * @param eleccion String que contine el número elegido por el usuario
+     * @return boolean
+     */
+    private static boolean validarEleccionMenu2(String eleccion) {
+        return eleccion.equals("1") || eleccion.equals("2") || eleccion.equals("3") || eleccion.equals("4") || eleccion.equals("5") || eleccion.equals("6") || eleccion.equals("7") || eleccion.equals("8");
     }
 
 }
