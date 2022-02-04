@@ -94,8 +94,10 @@ public class CuentaBancaria {
             sumad1 +=  Integer.parseInt(Character.toString(cad1.charAt(i))) * pesos[i];
             sumad2 +=  Integer.parseInt(Character.toString(numCuenta.charAt(i))) * pesos[i];
         }
-        sumad1 = sumad1 % 11;
-        sumad2 = sumad2 % 11;
+        sumad1 = 11 - sumad1 % 11;
+        System.out.println(sumad1);
+        sumad2 = 11 - sumad2 % 11;
+        System.out.println(sumad2);
         String DC = "" + sumad1 + sumad2;
         return DC;
     }
@@ -187,7 +189,7 @@ public class CuentaBancaria {
      * @param titular
      * @return boolean
      */
-    private static boolean validarTitular(String titular) {
+    public static boolean validarTitular(String titular) {
         Pattern nombre = Pattern.compile("^(?=.+[a-z])(?=.+[A-Z]).{10,100}$");
         Matcher m = nombre.matcher(titular);
         return m.matches();
@@ -199,7 +201,7 @@ public class CuentaBancaria {
      * @param nif
      * @return boolean
      */
-    private static boolean validarId(String nif) {
+    public static boolean validarId(String nif) {
         boolean validez = false;
         char inicio = nif.charAt(0);
         //comprobar si es nif o nie
@@ -270,23 +272,23 @@ public class CuentaBancaria {
                     int digito1 = (Integer.parseInt(Character.toString(cif.charAt(i))) * 2) / 10;
                     int digito2 = (Integer.parseInt(Character.toString(cif.charAt(i))) * 2) % 10;
                     sumaImpares += digito1 + digito2;
-                    System.out.println(sumaImpares);
                 }else{
-                    sumaImpares += Integer.parseInt(Character.toString(cif.charAt(i)));
+                    sumaImpares += Integer.parseInt(Character.toString(cif.charAt(i))) * 2;
                 }
             }
         }
         
-        String suma = "" + sumaPares + sumaImpares;
+        String suma = "" + (sumaPares + sumaImpares);
         int digito = Integer.parseInt(Character.toString(suma.charAt(suma.length()-1)));
         digito = 10 - digito;
-
+        
         /**
          * Un CIF puede acabar en número o caracter, si acaba en caracter, el número final ha de coincidir
          * con la letra correcta del String [caracteres], y si es un digito, el cálculo ha de coincidir
          * con el digito final del CIF.
          */
         if(Character.isAlphabetic(charFinal)){
+            digito--;
             validez = Character.toString(caracteres.charAt(digito)).equals(Character.toString(charFinal));
         }else{
             String digitoFinal = ""+digito;
@@ -302,7 +304,7 @@ public class CuentaBancaria {
      * @param contraseña
      * @return boolean
      */
-    private static boolean validarContraseña(String contraseña) {
+    public static boolean validarContraseña(String contraseña) {
         Pattern pass = Pattern.compile("^(?=.+[0-9]{2,})(?=.+[a-z])(?=.+[A-Z])(?=\\S+$).{8,20}$");
         Matcher p = pass.matcher(contraseña);
         return p.matches();
