@@ -187,7 +187,7 @@ public class CuentaBancaria {
      * @param titular
      * @return boolean
      */
-    private boolean validarTitular(String titular) {
+    private static boolean validarTitular(String titular) {
         Pattern nombre = Pattern.compile("^(?=.+[a-z])(?=.+[A-Z]).{10,100}$");
         Matcher m = nombre.matcher(titular);
         return m.matches();
@@ -199,7 +199,7 @@ public class CuentaBancaria {
      * @param nif
      * @return boolean
      */
-    private boolean validarId(String nif) {
+    private static boolean validarId(String nif) {
         boolean validez = false;
         char inicio = nif.charAt(0);
         //comprobar si es nif o nie
@@ -227,7 +227,7 @@ public class CuentaBancaria {
      * @param nif NIF/NIE de entrada
      * @return boolean
      */
-    private boolean validarNif(String nif){
+    private static boolean validarNif(String nif){
         Pattern dni = Pattern.compile("([XYZ]?)([0-9]{1,9})([A-Za-z])");
         Matcher d = dni.matcher(nif);
 
@@ -249,7 +249,7 @@ public class CuentaBancaria {
      * @param cif CIF a validar
      * @return boolean
      */
-    private boolean validarCif(String cif){
+    private static boolean validarCif(String cif){
         //Variables
         String caracteres = "ABCDEFGHIJ";
         int sumaPares = 0;
@@ -294,7 +294,7 @@ public class CuentaBancaria {
      * @param contraseña
      * @return boolean
      */
-    private boolean validarContraseña(String contraseña) {
+    private static boolean validarContraseña(String contraseña) {
         Pattern pass = Pattern.compile("^(?=.+[0-9]{2,})(?=.+[a-z])(?=.+[A-Z])(?=\\S+$).{8,20}$");
         Matcher p = pass.matcher(contraseña);
         return p.matches();
