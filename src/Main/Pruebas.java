@@ -1,7 +1,6 @@
 
 package Main;
 
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,7 +9,6 @@ import javax.sound.sampled.SourceDataLine;
 public class Pruebas {
 
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
         String titular;
         String nif;
         String password;
@@ -32,10 +30,22 @@ public class Pruebas {
         }while(!validarContraseña(password));
 
         do{
-            entidad= leerDatosTeclado.leerString("Deme la entidad bancaria");
-            oficina = leerDatosTeclado.leerString("Deme la oficina bancaria");
-            DC = leerDatosTeclado.leerString("Deme los digitos de control de su cuenta");
-            numCuenta = leerDatosTeclado.leerString("Deme su número de cuenta");
+            do{
+                entidad = leerDatosTeclado.leerString("Deme la entidad bancaria");
+            }while(entidad.length() != 4);
+
+            do{
+                oficina = leerDatosTeclado.leerString("Deme la oficina bancaria");
+            }while(oficina.length() != 4);
+
+            do{
+                DC = leerDatosTeclado.leerString("Deme los digitos de control de su cuenta");
+            }while(DC.length() != 2);
+
+            do{
+                numCuenta = leerDatosTeclado.leerString("Deme su número de cuenta");
+            }while(numCuenta.length() != 10);
+
         }while(!comprobarCCC(entidad+oficina+DC+numCuenta));
 
         CuentaBancaria caixa = new CuentaBancaria(titular, nif, password, entidad+oficina+DC+numCuenta);
