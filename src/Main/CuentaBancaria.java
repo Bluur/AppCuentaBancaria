@@ -257,7 +257,11 @@ public class CuentaBancaria {
         boolean validez;
         char charFinal = cif.charAt(8);
         
-        //Cálculos necesarios para la validación
+        /**
+         * Bucle que valida un CIF, separa los pares de los impares, los pares los suma en una variable,
+         * los impares los multiplica por 2 y si son de 2 digitos, suma esos digitos y el resultado lo
+         * suma a una variable.
+         */
         for(int i=1; i < 8; i++){
             if(i%2 == 0){
                 sumaPares += (Integer.parseInt(Character.toString(cif.charAt(i))));
@@ -277,7 +281,11 @@ public class CuentaBancaria {
         int digito = Integer.parseInt(Character.toString(suma.charAt(suma.length()-1)));
         digito = 10 - digito;
 
-        //Da las diferentes salidas en caso de que sea un número o una letra
+        /**
+         * Un CIF puede acabar en número o caracter, si acaba en caracter, el número final ha de coincidir
+         * con la letra correcta del String [caracteres], y si es un digito, el cálculo ha de coincidir
+         * con el digito final del CIF.
+         */
         if(Character.isAlphabetic(charFinal)){
             validez = Character.toString(caracteres.charAt(digito)).equals(Character.toString(charFinal));
         }else{
