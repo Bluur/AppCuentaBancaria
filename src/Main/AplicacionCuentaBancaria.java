@@ -4,7 +4,7 @@ public class AplicacionCuentaBancaria {
 
     public static void main(String[] args) {
         //Crea array vacío para introducir las cuentas y número de control de cuentas
-        CuentaBancaria arrayCuentas[] = new CuentaBancaria[10];
+        CuentaBancaria [] arrayCuentas = new CuentaBancaria[10];
         int numeroControl = 0;
 
         //Mensaje de Bienvenida estático
@@ -55,11 +55,10 @@ public class AplicacionCuentaBancaria {
                     if (numeroControl == 0) {
                         System.out.println("No hay cuentas en el banco");
                     } else {
-                        consultarDepósitos(arrayCuentas);
+                        consultarDepositos(arrayCuentas);
                     }
                 }
-                case "5" ->
-                    continuar = false;
+                case "5" -> continuar = false;
             }
         }
     }
@@ -73,19 +72,19 @@ public class AplicacionCuentaBancaria {
         //Imprime las opciones
         for (int i = 0; i <= 5; i++) {
             switch (i) {
-                case 1 ->
-                    System.out.println("1.- Crear cuenta bancaria");
-                case 2 ->
-                    System.out.println("2.- Eliminar cuenta bancaria");
-                case 3 ->
-                    System.out.println("3.- Gestionar cuenta bancaria");
-                case 4 ->
-                    System.out.println("4.- Consultar depósitos");
-                case 5 ->
-                    System.out.println("5.- Salir del programa");
+                case 1 -> System.out.println("1.- Crear cuenta bancaria");
+
+                case 2 -> System.out.println("2.- Eliminar cuenta bancaria");
+
+                case 3 -> System.out.println("3.- Gestionar cuenta bancaria");
+
+                case 4 -> System.out.println("4.- Consultar depósitos");
+
+                case 5 -> System.out.println("5.- Salir del programa");
             }
         }
-        //Recoge la elección en un bucle del que no sale hasta que sea una opción valida.
+
+        //Valida la elección del usuario 1-5
         String eleccion;
         do {
             eleccion = leerDatosTeclado.leerString("¿Qué operación desea realizar?(Introduzca el número de operación)");
@@ -121,26 +120,34 @@ public class AplicacionCuentaBancaria {
 
         do {
             titular = leerDatosTeclado.leerString("Deme el nombre del titular de la cuenta");
-        } while (!CuentaBancaria.validarTitular(titular));
+        } while (!funcionesValidadoras.validarTitular(titular));
 
         do {
             nif = leerDatosTeclado.leerString("Deme el NIF/NIE/CIF del titular");
-        } while (!CuentaBancaria.validarId(nif));
+        } while (!funcionesValidadoras.validarId(nif));
 
         do {
             password = leerDatosTeclado.leerString("Deme la contraseña que quiere para su cuenta, 1 minúscula, 1 mayúscula y 8 carácteres");
-        } while (!CuentaBancaria.validarContraseña(password));
+        } while (!funcionesValidadoras.validarPassword(password));
 
         do {
-            entidad = leerDatosTeclado.leerString("Deme la entidad bancaria");
+            do {
+                entidad = leerDatosTeclado.leerString("Deme la entidad bancaria");
+            }while(entidad.length() != 4);
 
-            oficina = leerDatosTeclado.leerString("Deme la oficina bancaria");
+            do {
+                oficina = leerDatosTeclado.leerString("Deme la oficina bancaria");
+            }while(oficina.length() != 4);
 
-            DC = leerDatosTeclado.leerString("Deme los digitos de control de su cuenta");
+            do {
+                DC = leerDatosTeclado.leerString("Deme los digitos de control de su cuenta");
+            }while(DC.length() != 2);
 
-            numCuenta = leerDatosTeclado.leerString("Deme su número de cuenta");
+            do {
+                numCuenta = leerDatosTeclado.leerString("Deme su número de cuenta");
+            }while(numCuenta.length() != 10);
+        } while (!funcionesValidadoras.comprobarCCC(entidad+oficina+DC+numCuenta));
 
-        } while (!CuentaBancaria.comprobarCCC(entidad+oficina+DC+numCuenta));
         cuenta = new CuentaBancaria(titular, nif, password, entidad, oficina, DC, numCuenta);
         return cuenta;
     }
@@ -174,7 +181,7 @@ public class AplicacionCuentaBancaria {
      * @param nif NIF/NIE/CIF introducido
      * @param arrayCuentas Array bancario para realizar la busqueda de la cuenta
      */
-    private static void gestionarCuenta(String nif, CuentaBancaria arrayCuentas[]) {
+    private static void gestionarCuenta(String nif, CuentaBancaria[] arrayCuentas) {
         int pos = buscarCuenta(nif, arrayCuentas);
         String decision;
         do {
@@ -188,8 +195,8 @@ public class AplicacionCuentaBancaria {
                     System.out.println(arrayCuentas[pos].getNif());
                 case "4" -> {
                     System.out.println("Dame la contraseña que quieres usar");
-                    String contraseña = leerDatosTeclado.leerString("Debe tener al menos 1 mayus, 1 minus, y 8 carácteres");
-                    arrayCuentas[pos].setPassword(contraseña);
+                    String password = leerDatosTeclado.leerString("Debe tener al menos 1 mayus, 1 minus, y 8 carácteres");
+                    arrayCuentas[pos].setPassword(password);
                 }
                 case "5" -> {
                     double cantidad = leerDatosTeclado.leerDouble("Dame la cantidad que quieres ingresar", 0);
@@ -217,7 +224,7 @@ public class AplicacionCuentaBancaria {
      *
      * @param arrayCuentas Array con todas las cuentas bancarias
      */
-    private static void consultarDepósitos(CuentaBancaria[] arrayCuentas) {
+    private static void consultarDepositos(CuentaBancaria[] arrayCuentas) {
         if (arrayCuentas[0] != null) {
             double sumaDepositos = 0;
             for (int i = 0; arrayCuentas[i + 1] != null && i <= 10; i++) {
