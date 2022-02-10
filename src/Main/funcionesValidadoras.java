@@ -41,7 +41,7 @@ public class funcionesValidadoras {
             }
             validez = validarNif(nie);
         }else if(matchCIF.matches()){
-            validez = funcionesValidadoras.validarCif(nif);
+            validez = validarCif(nif);
         }else{
             validez = false;
         }
