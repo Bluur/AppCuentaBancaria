@@ -104,7 +104,8 @@ public class AplicacionCuentaBancaria {
     }
 
     /**
-     * Función que crea una cuentaBancaria, actualmente con datos de prueba
+     * Función que crea una cuentaBancaria.
+     * Valida todos los datos que le entran.
      *
      * @return Objeto CuentaBancaria
      */

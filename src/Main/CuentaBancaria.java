@@ -51,7 +51,7 @@ public class CuentaBancaria {
             throw new IllegalArgumentException("El titular no es válido");
         }
         
-        if (funcionesValidadoras.validarId(nif)){
+        if (!funcionesValidadoras.validarId(nif)){
             throw new IllegalArgumentException("El nif no es válido");
         }
         

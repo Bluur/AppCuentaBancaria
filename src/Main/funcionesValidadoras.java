@@ -4,6 +4,49 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class funcionesValidadoras {
+    
+    /**
+     * Separa los NIF/NIE de los CIF, el NIE lo pasa como un DNI pero cambiandole
+     * el dígito inicial
+     *
+     * @param nif NIF/CIF/NIE a validar
+     * @return boolean
+     */
+    public static boolean validarId(String nif) {
+        Pattern NIE = Pattern.compile("^([XYZ])([0-9]{6,7})([A-Z])$");
+        Pattern CIF = Pattern.compile("^([A-W][^a-z])([0-9]{6,7})([A-Z]?)$");
+        Pattern NIF = Pattern.compile("^([0-9]{8})([A-Z])$");
+        Matcher matchNIE = NIE.matcher(nif);
+        Matcher matchCIF = CIF.matcher(nif);
+        Matcher matchNIF = NIF.matcher(nif);
+
+        boolean validez;
+        char inicio = nif.charAt(0);
+
+        //comprobar si es nif o nie
+        if(matchNIF.matches()){
+            validez = validarNif(nif);
+        }else if(matchNIE.matches()){
+            String nie;
+            switch (inicio) {
+                case 'X' ->{
+                    nie = "0" + nif.substring(1);
+                }
+                case 'Y' -> {
+                    nie = "1" + nif.substring(1);
+                }
+                default->{
+                    nie = "2" + nif.substring(1);    
+                }    
+            }
+            validez = validarNif(nie);
+        }else if(matchCIF.matches()){
+            validez = funcionesValidadoras.validarCif(nif);
+        }else{
+            validez = false;
+        }
+        return validez;
+    }
 
     /**
      * Valida el NIF y el NIE, con un patrón para la estructura y con un
@@ -107,46 +150,6 @@ public class funcionesValidadoras {
         Matcher m = nombre.matcher(titular);
         return m.matches();
     }
-
-    /**
-     * Separa los NIF/NIE de los CIF, el NIE lo pasa como un DNI pero cambiandole
-     * el dígito inicial
-     *
-     * @param nif NIF/CIF/NIE a validar
-     * @return boolean
-     */
-    public static boolean validarId(String nif) {
-        Pattern NIE = Pattern.compile("^([XYZ])([0-9]{6,7})([A-Z])$");
-        Pattern CIF = Pattern.compile("^([A-W][^a-z])([0-9]{6,7})([A-Z]?)$");
-        Pattern NIF = Pattern.compile("^([0-9]{8})([A-Z])$");
-        Matcher matchNIE = NIE.matcher(nif);
-        Matcher matchCIF = CIF.matcher(nif);
-        Matcher matchNIF = NIF.matcher(nif);
-
-        boolean validez;
-        char inicio = nif.charAt(0);
-
-        //comprobar si es nif o nie
-        if(matchNIF.matches()){
-            validez = validarNif(nif);
-        }else if(matchNIE.matches()){
-            String nie;
-            if(nif.startsWith("X")){
-                nie = "0" + nif.substring(1);
-            }else if(nif.startsWith("Y")){
-                nie = "1" + nif.substring(1);
-            }else{
-                nie = "2" + nif.substring(1);
-            }
-            validez = validarNif(nie);
-        }else if(matchCIF.matches()){
-            validez = funcionesValidadoras.validarCif(nif);
-        }else{
-            validez = false;
-        }
-        return validez;
-    }
-
 
     /**
      * Se le pasan la entidad, oficina y numCuenta, para que calcule los números
